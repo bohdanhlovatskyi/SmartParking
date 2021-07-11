@@ -5,9 +5,11 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
-#define PIN_CE 10
+#define PIN_CE 8
 #define PIN_CSN 9
 #define DATA_LEN 3
+
+const byte address[6] = "00001";
 
 // MODULES
 Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
@@ -38,10 +40,9 @@ void setup(void)
     // while(1);
   }
 
-  radio.setChannel(5);
-  radio.setDataRate(RF24_1MBPS);
-  radio.setPALevel(RF24_PA_HIGH);
-  radio.openWritingPipe(0x7878787878LL);
+  radio.openWritingPipe(address);
+  radio.setPALevel(RF24_PA_MIN);
+  radio.stopListening();
   
   /* Display some basic information on this sensor */
   // displaySensorDetails();
@@ -64,7 +65,7 @@ void loop(void)
   data[0] = event.magnetic.x;
   data[1] = event.magnetic.y;
   data[2] = event.magnetic.z;
- 
+
   radio.write(&data, sizeof(data));
  
   delay(100);
