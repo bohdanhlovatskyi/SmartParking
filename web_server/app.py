@@ -2,8 +2,10 @@ from flask import Flask, jsonify, render_template, request
 import threading, queue
 import serial
 import time
+import json
 import numpy as np
 from datetime import datetime
+from pprint import pprint
 
 
 PORTS = ["/dev/cu.usbserial-14220", "/dev/cu.usbserial-14240",
@@ -50,6 +52,12 @@ def data_collection():
 
 @app.route("/update", methods = ['GET'])
 def update_chart():
+    '''
+    On the update call, it empties the global q, created to support
+    serial data receiving in a separate thread (though it also might
+    be filled via postjson request from esp)
+    '''
+
     data = []
     while not q.empty():
         data.append(q.get())
@@ -57,12 +65,23 @@ def update_chart():
     return jsonify(results = [np.array(data).mean(), datetime.now().strftime("%H:%M")])
 
 
+@app.route("/postjson", methods = ["POST"])
+def print_json():
+    data = request.data.decode("utf-8").strip()
+    data = json.loads(data)
+    pprint(data)
+
+    # TODO: just adds to the common queue
+
+    return "OK"
+
+
 @app.route("/")
 def index():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    open_port()
-    x = threading.Thread(target=data_collection)
-    x.start()
-    app.run(host='0.0.0.0', port=5000)
+    # open_port()
+    # x = threading.Thread(target=data_collection)
+    # x.start()
+    app.run(host='0.0.0.0', port=5000, debug=True)
