@@ -71,8 +71,7 @@ def print_json():
     data = json.loads(data)
     pprint(data)
 
-    # TODO: just adds to the common queue
-
+    q.put(data["value"])
     return "OK"
 
 
@@ -81,7 +80,9 @@ def index():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    # open_port()
-    # x = threading.Thread(target=data_collection)
-    # x.start()
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == 'd':
+        open_port()
+        x = threading.Thread(target=data_collection)
+        x.start()
     app.run(host='0.0.0.0', port=5000, debug=True)

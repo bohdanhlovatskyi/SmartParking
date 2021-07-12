@@ -5,21 +5,21 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 
-#define PIN_CE  4
-#define PIN_CSN 2
-
+#define PIN_CE  2
+#define PIN_CSN 15
 
 const byte address[6] = "00001";
 
 RF24 radio(PIN_CE, PIN_CSN);
 
 float rc_data[3] = {0};
-bool received = true; // SHOULD BE FALSE
+bool received = false; // SHOULD BE FALSE
 
 void setup() {
 
-  Serial.begin(115200);
+  Serial.begin(9600);
   WiFi.mode(WIFI_OFF);        //Prevents reconnection issue (taking too long to connect)
+  // !WiFi.begin("SAMASUNG", "07050378")
   while (!WiFi.begin("SAMASUNG", "07050378")) {
     Serial.println("There was a problem with wifi connection");
     delay(10000);
@@ -31,7 +31,7 @@ void setup() {
     Serial.println("Waiting for connection to wifi");
   }
 
-  if (!radio.begin()) {
+  while (!radio.begin()) {
     Serial.println("There was a problem with nrf connection");
     delay(10000);
   }
@@ -50,7 +50,6 @@ void setup() {
 void loop() {
   while(radio.available())
   {
-    Serial.println("No way");
     radio.read(&rc_data, sizeof(rc_data));
     for (int i = 0; i < 3; i++) {
       Serial.print(rc_data[i]); Serial.print("; ");
@@ -85,6 +84,7 @@ void loop() {
 
       // http.begin("http://anteph.pythonanywhere.com/postjson");      //Specify request destination
       http.begin(wifiClient, "http://192.168.0.103:5000/postjson");  
+      // http.begin(wifiClient, "http://10.10.225.18:5000/postjson");  
       http.addHeader("Content-Type", "application/json");  //Specify content-type header
  
       int httpCode = http.POST(JSONmessageBuffer);   //Send the request
@@ -102,3 +102,4 @@ void loop() {
       delay(1000);  //Send a request every 30 seconds
 }
 
+ 
