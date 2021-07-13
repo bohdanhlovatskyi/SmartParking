@@ -3,4 +3,9 @@ __pycache__
 .ipynb_checkpoints
 *.csv
 venv
-notes
+
+notes/cy8ckit-ble-a
+notes/wiring.md
+notes/notes.md
+notes/magnetometer.md
+notes/nrf_radio.md
