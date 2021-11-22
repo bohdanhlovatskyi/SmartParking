@@ -20,6 +20,9 @@ https://www.youtube.com/watch?v=wYSM8OyWwoo&feature=youtu.be
 ### Sensor-node unit
 ![sensor_node](project_materials/sensor_node.png)
 
+### System specification
+![system_specification](/project_materials/specification.png)
+
 ## Contributing
 - one can easily build the project basing on the schemes and generated zip-files with project
 - all the papers related to the topics can be found in project materials
