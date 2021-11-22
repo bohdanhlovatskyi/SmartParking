@@ -1,6 +1,6 @@
 # Smart Parking
 
-![gif](https://i.gifer.com/3uvT.gif)
+![gif](/project_materials/readme_gif.gif)
 
 All the informatino can be found in the attached presentation.
 
